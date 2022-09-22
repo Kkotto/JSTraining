@@ -1,4 +1,4 @@
-# InIS
+# InIS (Interfaces of Information Systems, ИнИс - "Интерфейсы информационных систем")
 
 ## Lab-1. 
 There's canva for drawing. Press Space to show recorded drawings. Press Space again to clear screen. 
