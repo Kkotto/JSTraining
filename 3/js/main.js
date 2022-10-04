@@ -1,5 +1,6 @@
 var isRect=false;
 var isCircle=true;
+let figures = [];
 
 window.onload = () => {
 
@@ -18,16 +19,17 @@ window.onload = () => {
   let isDrawStart = false;
   let startPosition = {x: 0, y: 0};
   let endPosition = {x: 0, y: 0};
+  let figureWidth=0;
+  let figureHeight=0;
+  let figureRadius=0;
 
   canvas.addEventListener('mousedown', mouseDownListener);
   canvas.addEventListener('mousemove', mouseMoveListener);
   canvas.addEventListener('mouseup', mouseUpListener);
 
-  //расчет положения мышки в пределах холста
-  //если у холста будет смещение
   function getClientOffset(event){
-    const x = event.clientX - canvas.offsetLeft;
-    const y = event.clientY - canvas.offsetTop;
+    const x = event.offsetX;
+    const y = event.offsetY;
     return {x,y}
   }
 
@@ -40,44 +42,63 @@ window.onload = () => {
     if(!isDrawStart) return;
 
     endPosition = getClientOffset(event);
-    const width = endPosition.x - startPosition.x;
-    const height = endPosition.y - startPosition.y;
-    const radius = Math.abs(endPosition.x - startPosition.x);
+    figureWidth = endPosition.x - startPosition.x;
+    figureHeight = endPosition.y - startPosition.y;
+    figureRadius = Math.abs(endPosition.x - startPosition.x);
     clearCanvas();
-    if(isRect) drawRectangle(width, height);
-    else drawCircle(radius);
+    if(isRect) drawRectangle(startPosition.x, startPosition.y, figureWidth, figureHeight);
+    else drawCircle(startPosition.x, startPosition.y, figureRadius);
   }
 
-  function drawRectangle(width, height){
+  function drawRectangle(x, y, width, height){
     context.beginPath();
-    context.rect(startPosition.x, startPosition.y, width, height);
+    context.rect(x, y, width, height);
     context.stroke();
     context.fill();
   }
 
-  function drawCircle(radius){
+  function drawCircle(x, y, radius){
     context.beginPath();
-    context.arc(startPosition.x, startPosition.y, radius, 0, 2*Math.PI);
+    context.arc(x, y, radius, 0, 2*Math.PI);
     context.stroke();
     context.fill();
   }
 
   function clearCanvas(){
     context.clearRect(0, 0, canvas.width, canvas.height);
+    figures.forEach((item, i) => {
+      if(item.isRect){
+        drawRectangle(item.x, item.y, item.width, item.height);
+      }else{
+        drawCircle(item.x, item.y, item.radius);
+      }
+    });
   }
 
   function mouseUpListener(event){
+    if(isRect){
+      figures.push({isRect: true, x: startPosition.x, y: startPosition.y, width: figureWidth, height: figureHeight, radius:0});
+    } else {
+      figures.push({isRect: false, x:startPosition.x, y:startPosition.y, width:0, height:0, radius:figureRadius});
+    }
     isDrawStart = false;
   }
 
 }
 
-function rect(){
+function rectFun(){
   isRect=true;
   isCircle=false;
 }
 
-function circ(){
+function circFun(){
   isCircle=true;
   isRect=false;
+}
+
+function clr(){
+  const canvas = document.getElementById('canvas');
+  const context = canvas.getContext('2d');
+  context.clearRect(0, 0, canvas.width, canvas.height);
+  figures = [];
 }

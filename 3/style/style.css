@@ -7,7 +7,7 @@ html, body {
 
 canvas {
   display: block;
-  border: 2px solid #000;
+  border: 1px solid #000;
   cursor: crosshair;
 }
 
