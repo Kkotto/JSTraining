@@ -155,6 +155,7 @@ window.onload = () => {
         const y = event.offsetY;
         return {x, y}
     }
+
     canvas.addEventListener('mousedown', event => {
         startPosition = getClientOffset(event);
         isDrawStart = true;
@@ -192,18 +193,21 @@ window.onload = () => {
         }
         isDrawStart = false;
     });
+
     function drawRectangle(x, y, width, height) {
         context.beginPath();
         context.rect(x, y, width, height);
         context.stroke();
         context.fill();
     }
+
     function drawCircle(x, y, radius) {
         context.beginPath();
         context.arc(x, y, radius, 0, 2 * Math.PI);
         context.stroke();
         context.fill();
     }
+
     function clearCanvas() {
         context.clearRect(0, 0, canvas.width, canvas.height);
         figures.forEach((item, i) => {
