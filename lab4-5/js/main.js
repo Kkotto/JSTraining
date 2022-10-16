@@ -6,6 +6,18 @@ let isCanvas = false;
 let isRectangle = true;
 let isCircle = false;
 
+//Drawing settings
+let colors = {
+    red: "#6a0114",
+    yellow: "#ffdc32",
+    green: "#ADFF2F",
+    blue: "#1aa9ff",
+    purple: "#60449f",
+    black: "#000000",
+    pink: "#ffb5c3"
+};
+let sizes = {"3": 3, "5": 5, '7': 7, '9': 9, '11': 11, '13': 13};
+
 window.onload = () => {
     //Canvas & SVG
     const svg = document.getElementById('svg');
@@ -84,6 +96,24 @@ window.onload = () => {
     });
 
 
+    //Drawing settings
+    const colorSelector = document.getElementById("colorFill");
+    colorSelector.addEventListener('click', event => {
+        color = colors[colorSelector.value];
+    });
+    let color = colors[colorSelector.value];
+    const lineColorSelector = document.getElementById("colorLine");
+    lineColorSelector.addEventListener('click', event => {
+        lineColor = colors[lineColorSelector.value];
+    });
+    let lineColor = colors[lineColorSelector.value];
+    const lineSizeSelector = document.getElementById("lineWidth");
+    lineSizeSelector.addEventListener('click', event => {
+        lineSize = sizes[lineSizeSelector.value];
+    });
+    let lineSize = sizes[lineSizeSelector.value];
+
+
     //SVG event listener
     svg.addEventListener('mousedown', (event) => {
         const svgPoint = (elem, x, y) => {
@@ -112,16 +142,18 @@ window.onload = () => {
                 rect.setAttributeNS(null, 'y', point.y);
                 rect.setAttributeNS(null, 'width', width);
                 rect.setAttributeNS(null, 'height', height);
-                rect.setAttributeNS(null, "stroke", "black");
-                rect.setAttributeNS(null, "fill", "orange");
+                rect.setAttributeNS(null, "stroke", lineColor);
+                rect.setAttributeNS(null, "fill", color);
+                rect.setAttributeNS(null, "stroke-width", lineSize);
                 svg.appendChild(rect);
             }
             if (isCircle && isSvg) {
                 circle.setAttributeNS(null, "cx", start.x);
                 circle.setAttributeNS(null, "cy", start.y);
                 circle.setAttributeNS(null, 'r', radius);
-                circle.setAttributeNS(null, "stroke", "black");
-                circle.setAttributeNS(null, "fill", "pink");
+                circle.setAttributeNS(null, "stroke", lineColor);
+                circle.setAttributeNS(null, "fill", color);
+                circle.setAttributeNS(null, "stroke-width", lineSize);
                 svg.appendChild(circle);
             }
         };
@@ -137,11 +169,11 @@ window.onload = () => {
 
 
     //Canvas event listener
-    context.lineWidth = 5;
     context.lineJoin = 'round';
     context.lineCap = 'round';
-    context.strokeStyle = 'black';
-    context.fillStyle = 'white';
+    context.lineWidth = lineSize;
+    context.strokeStyle = lineColor;
+    context.fillStyle = color;
     let isDrawStart = false;
     let startPosition = {x: 0, y: 0};
     let endPosition = {x: 0, y: 0};
@@ -168,53 +200,54 @@ window.onload = () => {
         figureHeight = endPosition.y - startPosition.y;
         figureRadius = Math.abs(endPosition.x - startPosition.x);
         clearCanvas();
-        if (isRectangle) drawRectangle(startPosition.x, startPosition.y, figureWidth, figureHeight);
-        else drawCircle(startPosition.x, startPosition.y, figureRadius);
+        if (isRectangle) drawRectangle(startPosition.x, startPosition.y, figureWidth, figureHeight, color, lineColor, lineSize);
+        else drawCircle(startPosition.x, startPosition.y, figureRadius, color, lineColor, lineSize);
     });
     canvas.addEventListener('mouseup', event => {
         if (isRectangle) {
             figures.push({
-                isRect: true,
-                x: startPosition.x,
-                y: startPosition.y,
-                width: figureWidth,
-                height: figureHeight,
-                radius: 0
+                isRect: true, x: startPosition.x, y: startPosition.y,
+                width: figureWidth, height: figureHeight, radius: 0,
+                color: color, lineColor: lineColor, lineSize: lineSize
             });
-        } else {
+        }
+        if (isCircle) {
             figures.push({
-                isRect: false,
-                x: startPosition.x,
-                y: startPosition.y,
-                width: 0,
-                height: 0,
-                radius: figureRadius
+                isRect: false, x: startPosition.x, y: startPosition.y,
+                width: 0, height: 0, radius: figureRadius,
+                color: color, lineColor: lineColor, lineSize: lineSize
             });
         }
         isDrawStart = false;
     });
 
-    function drawRectangle(x, y, width, height) {
+    function drawRectangle(x, y, width, height, color, lineColor, lineSize) {
         context.beginPath();
+        context.lineWidth = lineSize;
+        context.fillStyle = color;
+        context.strokeStyle = lineColor;
         context.rect(x, y, width, height);
-        context.stroke();
         context.fill();
+        context.stroke();
     }
 
-    function drawCircle(x, y, radius) {
+    function drawCircle(x, y, radius, color, lineColor, lineSize) {
         context.beginPath();
+        context.lineWidth = lineSize;
+        context.fillStyle = color;
+        context.strokeStyle = lineColor;
         context.arc(x, y, radius, 0, 2 * Math.PI);
-        context.stroke();
         context.fill();
+        context.stroke();
     }
 
     function clearCanvas() {
         context.clearRect(0, 0, canvas.width, canvas.height);
         figures.forEach((item, i) => {
             if (item.isRect) {
-                drawRectangle(item.x, item.y, item.width, item.height);
+                drawRectangle(item.x, item.y, item.width, item.height, item.color, item.lineColor, item.lineSize);
             } else {
-                drawCircle(item.x, item.y, item.radius);
+                drawCircle(item.x, item.y, item.radius, item.color, item.lineColor, item.lineSize);
             }
         });
     }
