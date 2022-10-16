@@ -8,15 +8,17 @@ html, body {
     height: 100%;
 }
 
-canvas {
+#canvas, #svg {
     display: block;
     border: 1px solid #000;
+}
+
+.cnvActive{
     cursor: crosshair;
 }
 
-#svg {
-    display: block;
-    border: 1px solid #000;
+.cnvInactive {
+    cursor: default;
 }
 
 /* Buttons */

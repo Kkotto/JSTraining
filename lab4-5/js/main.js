@@ -1,7 +1,6 @@
 //Canvas & SVG
 let isSvg = true;
 let isCanvas = false;
-let isCanvasSVG = false;
 
 //Figures
 let isRectangle = true;
@@ -11,8 +10,10 @@ window.onload = () => {
     //Canvas & SVG
     const svg = document.getElementById('svg');
     const canvas = document.getElementById('canvas');
+    const context = canvas.getContext('2d');
     canvas.setAttribute('width', window.innerWidth);
     canvas.setAttribute('height', window.innerHeight);
+
 
     //Canvas & SVG switching buttons
     const btnSVG = document.getElementById("btnSVG");
@@ -21,11 +22,11 @@ window.onload = () => {
         btnCanvas.classList.replace("btnActive", "btnInactive");
         btnCanvasSVG.classList.replace("btnActive", "btnInactive");
         btnClear.classList.replace("btnBlocked", "btnUnblocked");
+        svg.classList.replace("cnvInactive", "cnvActive");
         document.getElementById("fldSVG").style.display = "block";
         document.getElementById("fldCanvas").style.display = "none";
         isSvg = true;
         isCanvas = false;
-        isCanvasSVG = false;
     });
     const btnCanvas = document.getElementById("btnCanvas");
     btnCanvas.addEventListener('click', function () {
@@ -33,11 +34,11 @@ window.onload = () => {
         btnSVG.classList.replace("btnActive", "btnInactive");
         btnCanvasSVG.classList.replace("btnActive", "btnInactive");
         btnClear.classList.replace("btnBlocked", "btnUnblocked");
+        canvas.classList.replace("cnvInactive", "cnvActive");
         document.getElementById("fldSVG").style.display = "none";
         document.getElementById("fldCanvas").style.display = "block";
         isSvg = false;
         isCanvas = true;
-        isCanvasSVG = false;
     });
     const btnCanvasSVG = document.getElementById("btnCanvasSVG");
     btnCanvasSVG.addEventListener('click', function () {
@@ -45,12 +46,14 @@ window.onload = () => {
         btnCanvas.classList.replace("btnActive", "btnInactive");
         btnSVG.classList.replace("btnActive", "btnInactive");
         btnClear.classList.replace("btnUnblocked", "btnBlocked");
+        svg.classList.replace("cnvActive", "cnvInactive");
+        canvas.classList.replace("cnvActive", "cnvInactive");
         document.getElementById("fldSVG").style.display = "block";
         document.getElementById("fldCanvas").style.display = "block";
         isSvg = false;
         isCanvas = false;
-        isCanvasSVG = true;
     });
+
 
     //Figures switching buttons
     const btnRectangle = document.getElementById("btnRectangle");
@@ -69,7 +72,17 @@ window.onload = () => {
     });
     const btnClear = document.getElementById("btnClear");
     btnClear.addEventListener('click', function () {
+        if (isSvg) {
+            while (svg.lastChild) {
+                svg.removeChild(svg.lastChild);
+            }
+        }
+        if (isCanvas) {
+            context.clearRect(0, 0, canvas.width, canvas.height);
+            figures = [];
+        }
     });
+
 
     //SVG event listener
     svg.addEventListener('mousedown', (event) => {
@@ -111,7 +124,6 @@ window.onload = () => {
                 circle.setAttributeNS(null, "fill", "pink");
                 svg.appendChild(circle);
             }
-
         };
 
         const endDraw = (event) => {
@@ -122,4 +134,84 @@ window.onload = () => {
         svg.addEventListener('mousemove', drawRect);
         svg.addEventListener('mouseup', endDraw);
     });
+
+
+    //Canvas event listener
+    context.lineWidth = 5;
+    context.lineJoin = 'round';
+    context.lineCap = 'round';
+    context.strokeStyle = 'black';
+    context.fillStyle = 'white';
+    let isDrawStart = false;
+    let startPosition = {x: 0, y: 0};
+    let endPosition = {x: 0, y: 0};
+    let figureWidth = 0;
+    let figureHeight = 0;
+    let figureRadius = 0;
+    let figures = [];
+
+    function getClientOffset(event) {
+        const x = event.offsetX;
+        const y = event.offsetY;
+        return {x, y}
+    }
+    canvas.addEventListener('mousedown', event => {
+        startPosition = getClientOffset(event);
+        isDrawStart = true;
+    });
+    canvas.addEventListener('mousemove', event => {
+        if (!isDrawStart || !isCanvas) return;
+
+        endPosition = getClientOffset(event);
+        figureWidth = endPosition.x - startPosition.x;
+        figureHeight = endPosition.y - startPosition.y;
+        figureRadius = Math.abs(endPosition.x - startPosition.x);
+        clearCanvas();
+        if (isRectangle) drawRectangle(startPosition.x, startPosition.y, figureWidth, figureHeight);
+        else drawCircle(startPosition.x, startPosition.y, figureRadius);
+    });
+    canvas.addEventListener('mouseup', event => {
+        if (isRectangle) {
+            figures.push({
+                isRect: true,
+                x: startPosition.x,
+                y: startPosition.y,
+                width: figureWidth,
+                height: figureHeight,
+                radius: 0
+            });
+        } else {
+            figures.push({
+                isRect: false,
+                x: startPosition.x,
+                y: startPosition.y,
+                width: 0,
+                height: 0,
+                radius: figureRadius
+            });
+        }
+        isDrawStart = false;
+    });
+    function drawRectangle(x, y, width, height) {
+        context.beginPath();
+        context.rect(x, y, width, height);
+        context.stroke();
+        context.fill();
+    }
+    function drawCircle(x, y, radius) {
+        context.beginPath();
+        context.arc(x, y, radius, 0, 2 * Math.PI);
+        context.stroke();
+        context.fill();
+    }
+    function clearCanvas() {
+        context.clearRect(0, 0, canvas.width, canvas.height);
+        figures.forEach((item, i) => {
+            if (item.isRect) {
+                drawRectangle(item.x, item.y, item.width, item.height);
+            } else {
+                drawCircle(item.x, item.y, item.radius);
+            }
+        });
+    }
 }
