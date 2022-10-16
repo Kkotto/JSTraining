@@ -8,14 +8,6 @@ html, body {
     height: 100%;
 }
 
-.btnActive {
-    border: 1px solid #ffaa22;
-}
-
-.btnInactive {
-    border: 1px solid #000000;
-}
-
 canvas {
     display: block;
     border: 1px solid #000;
@@ -25,4 +17,18 @@ canvas {
 #svg {
     display: block;
     border: 1px solid #000;
+}
+
+/* Buttons */
+.btnActive {
+    border: 1px solid #ffaa22;
+}
+
+.btnInactive, .btnUnblocked {
+    border: 1px solid #000000;
+}
+
+.btnBlocked {
+    border: 1px solid #000000;
+    text-decoration: line-through;
 }
