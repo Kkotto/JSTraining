@@ -198,7 +198,7 @@ window.onload = () => {
         endPosition = getClientOffset(event);
         figureWidth = endPosition.x - startPosition.x;
         figureHeight = endPosition.y - startPosition.y;
-        figureRadius = Math.abs(endPosition.x - startPosition.x);
+        figureRadius = Math.sqrt(Math.pow(endPosition.x - startPosition.x, 2) + Math.pow(endPosition.y - startPosition.y, 2));
         clearCanvas();
         if (isRectangle) drawRectangle(startPosition.x, startPosition.y, figureWidth, figureHeight, colorFill, colorLine, lineWidth);
         else drawCircle(startPosition.x, startPosition.y, figureRadius, colorFill, colorLine, lineWidth);
