@@ -8,13 +8,13 @@ let isCircle = false;
 
 //Drawing settings
 let colors = {
-    red: "#6a0114",
+    red: "#ff0000",
     yellow: "#ffdc32",
     green: "#ADFF2F",
     blue: "#1aa9ff",
-    purple: "#60449f",
+    purple: "#a516f0",
     black: "#000000",
-    pink: "#ffb5c3"
+    pink: "#ff00f1"
 };
 let sizes = {"3": 3, "5": 5, '7': 7, '9': 9, '11': 11, '13': 13};
 
@@ -95,7 +95,6 @@ window.onload = () => {
         }
     });
 
-
     //Drawing settings
     const slctColorFill = document.getElementById("colorFill");
     slctColorFill.addEventListener('click', event => {
@@ -113,19 +112,22 @@ window.onload = () => {
     });
     let lineWidth = sizes[slctLineWidth.value];
 
-
     //SVG event listener
+    let isFigureSelected = false;
+    let slctFigure;
+    const svgPoint = (elem, x, y) => {
+        const point = svg.createSVGPoint();
+        point.x = x;
+        point.y = y;
+        return point.matrixTransform(elem.getScreenCTM().inverse());
+    };
     svg.addEventListener('mousedown', (event) => {
-        const svgPoint = (elem, x, y) => {
-            const point = svg.createSVGPoint();
-            point.x = x;
-            point.y = y;
-            return point.matrixTransform(elem.getScreenCTM().inverse());
-        };
+        const start = svgPoint(svg, event.clientX, event.clientY);
+        draw(start);
+    });
+    function draw(start) {
         const rectangle = document.createElementNS('http://www.w3.org/2000/svg', 'rect');
         const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
-        const start = svgPoint(svg, event.clientX, event.clientY);
-
         const drawFigure = (e) => {
             const point = svgPoint(svg, e.clientX, e.clientY);
             const width = Math.abs(point.x - start.x);
@@ -137,7 +139,7 @@ window.onload = () => {
             if (point.y > start.y) {
                 point.y = start.y;
             }
-            if (isRectangle && isSvg) {
+            if (isRectangle && isSvg && !isFigureSelected) {
                 rectangle.setAttributeNS(null, 'x', point.x);
                 rectangle.setAttributeNS(null, 'y', point.y);
                 rectangle.setAttributeNS(null, 'width', width);
@@ -147,7 +149,7 @@ window.onload = () => {
                 rectangle.setAttributeNS(null, "stroke-width", lineWidth);
                 svg.appendChild(rectangle);
             }
-            if (isCircle && isSvg) {
+            if (isCircle && isSvg && !isFigureSelected) {
                 circle.setAttributeNS(null, "cx", start.x);
                 circle.setAttributeNS(null, "cy", start.y);
                 circle.setAttributeNS(null, 'r', radius);
@@ -157,23 +159,42 @@ window.onload = () => {
                 svg.appendChild(circle);
             }
         };
-
         const endDraw = (event) => {
             svg.removeEventListener('mousemove', drawFigure);
             svg.removeEventListener('mouseup', endDraw);
+            rectangle.addEventListener("dblclick", ev => {
+                if (!isFigureSelected) {
+                    manipulateRect(rectangle);
+                }
+            });
         };
-
         svg.addEventListener('mousemove', drawFigure);
         svg.addEventListener('mouseup', endDraw);
-    });
+    }
 
+    function manipulateRect(rect) {
+        slctFigure = rect;
+        slctFigure.setAttributeNS(null, "stroke-dasharray", "15,5");
+        isFigureSelected = true;
+        slctColorLine.addEventListener('click', event => {
+            slctFigure.setAttributeNS(null, "stroke", colors[slctColorLine.value]);
+        });
+        slctColorFill.addEventListener('click', event => {
+            slctFigure.setAttributeNS(null, "fill", colors[slctColorFill.value]);
+        });
+        slctLineWidth.addEventListener('click', event => {
+            slctFigure.setAttributeNS(null, "stroke-width", sizes[slctLineWidth.value]);
+        });
+        slctFigure.addEventListener("dblclick", ev => {
+            isFigureSelected = false;
+            slctFigure.setAttributeNS(null, "stroke-dasharray", "0,0");
+            slctFigure = null;
+        });
+    }
 
     //Canvas event listener
     context.lineJoin = 'round';
     context.lineCap = 'round';
-    context.lineWidth = lineWidth;
-    context.strokeStyle = colorLine;
-    context.fillStyle = colorFill;
     let isDrawStart = false;
     let startPosition = {x: 0, y: 0};
     let endPosition = {x: 0, y: 0};
@@ -251,4 +272,5 @@ window.onload = () => {
             }
         });
     }
+
 }
