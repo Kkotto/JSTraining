@@ -7,15 +7,12 @@ var key = 1;
 
 window.onload = () => {
 
-
     const canvas = document.getElementById('canvas');
     const ctx = canvas.getContext('2d');
     const indicator = document.getElementById('indicator');
 
-
     canvas.setAttribute('width', window.innerWidth);
     canvas.setAttribute('height', window.innerHeight);
-
 
     ctx.lineWidth = config.lineSize;
     ctx.lineJoin = 'round';
@@ -28,20 +25,17 @@ window.onload = () => {
         posX = [],
         posY = []
 
-
     canvas.addEventListener("mousedown", (e) => {
         if (isRec) return;
         clearCanvas();
         canvas.onmousemove = (e) => recordMousePos(e);
     });
 
-
     canvas.addEventListener("mouseup", () => stopDrawing());
 
-
     document.addEventListener("keydown", (e) => {
-        if(e.code == "Space") {
-            if(!isRec) {
+        if (e.code == "Space") {
+            if (!isRec) {
                 ctx.clearRect(0, 0, canvas.width, canvas.height);
                 ctx.beginPath();
                 isRec = true;
@@ -51,31 +45,27 @@ window.onload = () => {
         }
     })
 
-
     function recordMousePos(e) {
         posX.push(e.clientX);
         posY.push(e.clientY);
         drawLine(e.clientX, e.clientY);
     }
 
-
     function drawLine(x, y) {
         ctx.lineTo(x, y);
         ctx.stroke();
     }
 
-
     function clearCanvas() {
-        if(newDraw) {
+        if (newDraw) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             newDraw = false;
-            if(sketch != null) {
+            if (sketch != null) {
                 sketch.style.visibility = 'visible';
             }
         }
         ctx.beginPath();
     }
-
 
     function stopDrawing() {
         canvas.onmousemove = null;
@@ -83,11 +73,10 @@ window.onload = () => {
         posY.push(undefined);
     }
 
-
     function switchIndicator(enable) {
-        if(enable) {
+        if (enable) {
             indicator.classList.add('isWrite');
-        }else {
+        } else {
             indicator.classList.remove('isWrite');
         }
     }
@@ -105,16 +94,16 @@ window.onload = () => {
                 switchIndicator(true);
                 isRec = false;
                 newDraw = true;
-            }else {
-                if(currentX == undefined && currentY == undefined) {
+            } else {
+                if (currentX == undefined && currentY == undefined) {
                     ctx.beginPath();
-                }else {
+                } else {
                     drawLine(currentX, currentY);
                 }
             }
         }, 1);
 
-        if(sketch != null) {
+        if (sketch != null) {
             sketch.style.visibility = 'hidden';
         }
     }
@@ -122,13 +111,13 @@ window.onload = () => {
 }
 
 function myFunction() {
-  var sketch = document.getElementById("sketch");
-  var imgs = new Array('sketch.jpg', 'sketch1.jpg', 'sketch2.jpg', 'sketch3.jpg');
+    var sketch = document.getElementById("sketch");
+    var imgs = new Array('sketch.jpg', 'sketch1.jpg', 'sketch2.jpg', 'sketch3.jpg');
 
-  sketch.src=imgs[key];
-  if(key<imgs.length-1){
-    key++;
-  } else {
-    key=0;
-  }
+    sketch.src = imgs[key];
+    if (key < imgs.length - 1) {
+        key++;
+    } else {
+        key = 0;
+    }
 }
