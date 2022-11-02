@@ -1,3 +1,5 @@
+[![wakatime](https://wakatime.com/badge/github/Kkotto/JSTraining.svg)](https://wakatime.com/badge/github/Kkotto/JSTraining)
+
 ## Lab-1. 
 There's canva for drawing. Press Space to show recorded drawings. Press Space again to clear screen. 
 Click on screen to open background template picture again. 
