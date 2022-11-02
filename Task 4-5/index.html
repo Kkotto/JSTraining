@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style/style.css">
+    <script src="js/main.js"></script>
+    <title>lab5</title>
+</head>
+<body>
+<div id="panel">
+    <div class="selectionField">
+        <button id="btnSVG" class="activeButton">SVG</button>
+        <button id="btnCanvas" class="inactiveButton">Canvas</button>
+        <button id="btnCanvasSVG" class="inactiveButton">All</button>
+    </div>
+    <div class="selectionField">
+        <button id="btnRectangle" class="activeButton">Rectangle</button>
+        <button id="btnCircle" class="inactiveButton">Circle</button>
+        <button id="btnCursor" class="inactiveButton unblockedButton"><img src="img/cursor.png" alt="cursor" class="icon"></button>
+        <button id="btnClear" class="unblockedButton">Clear</button>
+    </div>
+    <div class="selectionField">
+        <div class="selectColorWidth">
+            <label for="inputFillingColor" id="lblFillingColor">Filling color</label>
+            <input type="color" id="inputFillingColor" name="inputFillingColor" value="#00FF00">
+        </div>
+        <div class="selectColorWidth">
+            <label for="inputBorderColor" id="lblBorderColor">Border color</label>
+            <input type="color" id="inputBorderColor" name="inputBorderColor" value="#FFFF00">
+        </div>
+        <div class="selectColorWidth">
+            <label for="slctBorderWidth" id="lblBorderWidth">Border width</label>
+            <select id="slctBorderWidth">
+                <option value="1">1</option>
+                <option value="3" selected>3</option>
+                <option value="5">5</option>
+                <option value="7">7</option>
+                <option value="9">9</option>
+                <option value="11">11</option>
+            </select>
+        </div>
+    </div>
+</div>
+<svg id="svgField" class="activeField drawMode"></svg>
+<canvas id="canvasField" class="inactiveField drawMode"></canvas>
+</body>
+</html>

@@ -1,0 +1,122 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    color: #fff;
+    height: 100vh;
+    text-align: center;
+    position: relative;
+    display: flex;
+}
+
+
+button {
+    cursor: pointer;
+    border-radius: 5px;
+    font: 20px 'Open Sans';
+    padding: 10px 50px 10px 50px;
+    margin: 10px;
+    width: 80%;
+}
+
+button:hover {
+    outline: none;
+    box-shadow: 8px 8px 20px #a516f0;
+}
+
+.activeButton {
+    background: linear-gradient(118.38deg, #ffb5c3 -4.6%, #a516f0 200.44%);
+}
+.activeButton:hover {
+    box-shadow: none;
+}
+
+.inactiveButton {
+
+}
+
+.unblockedButton {
+
+}
+
+.blockedButton {
+    background: gray;
+}
+
+.blockedButton:hover {
+    box-shadow: none;
+}
+
+label {
+    margin-left: 10px;
+    font: 1.2rem 'Open Sans';
+    padding: 10px;
+}
+
+input, select {
+    width: 60px;
+    height: 25px;
+    text-align: center;
+    outline: none;
+    font: 1rem 'Open Sans', sans-serif;
+}
+
+#panel {
+    height: 100%;
+    padding: 30px;
+    width: 20%;
+    background: linear-gradient(118.38deg, #ffb5c3 -4.6%, #a516f0 200.44%);
+    text-align: center;
+}
+
+.selectionField {
+    border: 3px solid #ffffff;
+    padding: 10px 10% 50px 10%;
+    border-radius: 15px;
+}
+
+.selectColorWidth {
+    padding: 10px;
+}
+
+.inactiveField {
+    display: none;
+}
+
+.activeField {
+    display: block;
+}
+
+.drawMode {
+    cursor: crosshair;
+}
+
+.clickMode {
+    cursor: default;
+}
+
+#svgField {
+    position: absolute;
+    border: 1px solid purple;
+    width: 80%;
+    height: 100%;
+    margin-left: 20%;
+}
+
+#canvasField {
+    border: 1px solid red;
+    position: absolute;
+    margin-left: 20%;
+}
+
+.icon {
+    height: 20px;
+    width: 20px;
+}
+
+.chosen {
+    filter: drop-shadow(0 -6mm 4mm rgb(160, 0, 210));
+}
