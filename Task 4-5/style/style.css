@@ -13,7 +13,8 @@ body {
 }
 
 
-button {
+button,
+.inactiveButton {
     cursor: pointer;
     border-radius: 5px;
     font: 20px 'Open Sans';
@@ -30,16 +31,9 @@ button:hover {
 .activeButton {
     background: linear-gradient(118.38deg, #ffb5c3 -4.6%, #a516f0 200.44%);
 }
+
 .activeButton:hover {
     box-shadow: none;
-}
-
-.inactiveButton {
-
-}
-
-.unblockedButton {
-
 }
 
 .blockedButton {
@@ -56,7 +50,8 @@ label {
     padding: 10px;
 }
 
-input, select {
+input,
+select {
     width: 60px;
     height: 25px;
     text-align: center;
@@ -82,34 +77,22 @@ input, select {
     padding: 10px;
 }
 
-.inactiveField {
-    display: none;
-}
-
-.activeField {
-    display: block;
-}
-
-.drawMode {
-    cursor: crosshair;
-}
-
-.clickMode {
-    cursor: default;
-}
-
 #svgField {
     position: absolute;
     border: 1px solid purple;
     width: 80%;
     height: 100%;
     margin-left: 20%;
+    display: block;
+    cursor: crosshair;
 }
 
 #canvasField {
     border: 1px solid red;
     position: absolute;
     margin-left: 20%;
+    display: none;
+    cursor: crosshair;
 }
 
 .icon {
@@ -119,4 +102,12 @@ input, select {
 
 .chosen {
     filter: drop-shadow(0 -6mm 4mm rgb(160, 0, 210));
+}
+
+#btnRectDiv,
+#btnCircDiv,
+#btnCursDiv,
+#btnClearDiv {
+    font: 20px 'Open Sans';
+    padding: 5px 0 5px;
 }

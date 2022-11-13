@@ -2,6 +2,7 @@
 let activeField = "SVG"; //выбор слоя
 let activeFigure = "rectangle"; //выбор фигуры
 let isDrawingMode = true; //можно ли рисовать (отключается для SVG при выделении объектов)
+let figures = []; //фигуры для Canvas
 
 window.onload = () => {
     //Все элементы с HTML по id
@@ -17,6 +18,11 @@ window.onload = () => {
     const btnCursor = document.querySelector("#btnCursor");
     const btnClear = document.querySelector("#btnClear");
 
+    const btnRectDiv = document.querySelector("#btnRectDiv");
+    const btnCircDiv = document.querySelector("#btnCircDiv");
+    const btnCursDiv = document.querySelector("#btnCursDiv");
+    const btnClearDiv = document.querySelector("#btnClearDiv");
+
     const inputFillingColor = document.querySelector("#inputFillingColor");
     const inputBorderColor = document.querySelector("#inputBorderColor");
     const slctBorderWidth = document.querySelector("#slctBorderWidth");
@@ -27,99 +33,110 @@ window.onload = () => {
     canvasField.setAttribute('width', window.innerWidth);
     canvasField.setAttribute('height', window.innerHeight);
 
-//----------------------ВЫБОР ПОЛЯ, ФИГУРЫ--------------------------------
-    //Выбор SVG
+    //----------------------ВЫБОР ПОЛЯ--------------------------------
+    //SVG
     btnSVG.addEventListener('click', evt => {
         activeField = "SVG";
+        isDrawingMode = true;
         blockButtonsSVG();
     });
-    //Выбор Canvas
-    btnCanvas.addEventListener('click', evt => {
-        activeField = "Canvas";
-        blockButtonsCanvas();
-    });
-    //Выбор обоих холстов
-    btnAll.addEventListener('click', evt => {
-        activeField = "All";
-        blockButtonsAllFields();
-    });
-    //Выбор прямоугольника
-    btnRectangle.addEventListener('click', ev => {
-        activeFigure = "rectangle";
-
-        btnRectangle.classList.replace("inactiveButton", "activeButton"); //выделить кнопку прямоугольника как активную
-        btnCircle.classList.replace("activeButton", "inactiveButton"); //выделить кнопку круга как неактивную
-        btnCursor.classList.replace("activeButton", "inactiveButton"); //выделить кнопку курсора как неактивную
-        if (activeField !== "All") {
-            isDrawingMode = true;
-            svgField.classList.replace("clickMode", "drawMode"); //изменить курсор на крестик SVG
-            canvasField.classList.replace("clickMode", "drawMode"); //изменить курсор на крестик Canvas
-        }
-
-    });
-    //Выбор круга
-    btnCircle.addEventListener('click', evt => {
-        activeFigure = "circle";
-
-        btnRectangle.classList.replace("activeButton", "inactiveButton"); //выделить кнопку прямоугольника как неактивную
-        btnCircle.classList.replace("inactiveButton", "activeButton"); //выделить кнопку круга как активную
-        btnCursor.classList.replace("activeButton", "inactiveButton"); //выделить кнопку как неактивную
-        if (activeField !== "All") {
-            isDrawingMode = true;
-            svgField.classList.replace("clickMode", "drawMode"); //изменить курсор на крестик
-            canvasField.classList.replace("clickMode", "drawMode"); //изменить курсор на крестик Canvas
-        }
-    });
-
-    //Изменение кнопок
     function blockButtonsSVG() {
-        btnSVG.classList.replace("inactiveButton", "activeButton"); //выделить кнопку SVG как активную
-        btnCanvas.classList.replace("activeButton", "inactiveButton"); //выделить кнопку Canvas как неактивную
-        btnAll.classList.replace("activeButton", "inactiveButton"); //выделить кнопку All как неактивную
+        btnSVG.classList.replace("inactiveButton", "activeButton");
+        btnCanvas.classList.replace("activeButton", "inactiveButton");
+        btnAll.classList.replace("activeButton", "inactiveButton");
 
-        svgField.classList.replace("inactiveField", "activeField"); //отобразить SVG
-        canvasField.classList.replace("activeField", "inactiveField"); //скрыть Canvas
+        svgField.style.display = "block";
+        canvasField.style.display = "none";
+        svgField.style.cursor = "crosshair";
 
-        btnClear.classList.replace("blockedButton", "unblockedButton"); //разблокировать кнопку Clear
-        btnCursor.classList.replace("blockedButton", "unblockedButton"); //разблокировать кнопку курсора
+        btnRectDiv.style.display = "block";
+        btnCircDiv.style.display = "block";
+
+        btnClearDiv.style.display = "block";
+        btnCursDiv.style.display = "block";
     }
 
+
+    //CANVAS
+    btnCanvas.addEventListener('click', evt => {
+        activeField = "Canvas";
+        isDrawingMode = true;
+        blockButtonsCanvas();
+    });
     function blockButtonsCanvas() {
-        btnCanvas.classList.replace("inactiveButton", "activeButton"); //выделить кнопку Canvas как активную
-        btnSVG.classList.replace("activeButton", "inactiveButton"); //выделить кнопку SVG как неактивную
-        btnAll.classList.replace("activeButton", "inactiveButton"); //выделить кнопку All как неактивную
+        btnCanvas.classList.replace("inactiveButton", "activeButton");
+        btnSVG.classList.replace("activeButton", "inactiveButton");
+        btnAll.classList.replace("activeButton", "inactiveButton");
 
-        svgField.classList.replace("activeField", "inactiveField"); //скрыть SVG
-        canvasField.classList.replace("inactiveField", "activeField"); //отобразить Canvas
+        svgField.style.display = "none";
+        canvasField.style.display = "block";
+        canvasField.style.cursor = "crosshair";
 
-        btnClear.classList.replace("blockedButton", "unblockedButton"); //разблокировать кнопку Clear
-        btnCursor.classList.replace("unblockedButton", "blockedButton"); //заблокировать кнопку курсора
+        btnRectDiv.style.display = "block";
+        btnCircDiv.style.display = "block";
+
+        btnCursor.classList.replace("activeButton", "inactiveButton");
+        btnClearDiv.style.display = "block";
+        btnCursDiv.style.display = "none";
 
         //если кнопка курсора была выбрана в SVG, выделяем кнопку прямоугольника/круга активной, т.к. в Canvas кнопка курсора неактивна
         if (activeFigure === "rectangle") {
-            btnRectangle.classList.replace("inactiveButton", "activeButton"); //выделить кнопку прямоугольника как активную
+            btnRectangle.classList.replace("inactiveButton", "activeButton");
         }
         if (activeFigure === "circle") {
-            btnCircle.classList.replace("inactiveButton", "activeButton"); //выделить кнопку круга как активную
+            btnCircle.classList.replace("inactiveButton", "activeButton");
         }
     }
 
+
+    //CANVAS & SVG
+    btnAll.addEventListener('click', evt => {
+        activeField = "All";
+        isDrawingMode = false;
+        blockButtonsAllFields();
+    });
     function blockButtonsAllFields() {
-        btnAll.classList.replace("inactiveButton", "activeButton"); //выделить кнопку All как активную
-        btnSVG.classList.replace("activeButton", "inactiveButton"); //выделить кнопку SVG как неактивную
-        btnCanvas.classList.replace("activeButton", "inactiveButton"); //выделить кнопку Canvas как неактивную
+        btnAll.classList.replace("inactiveButton", "activeButton");
+        btnSVG.classList.replace("activeButton", "inactiveButton");
+        btnCanvas.classList.replace("activeButton", "inactiveButton");
 
-        svgField.classList.replace("inactiveField", "activeField"); //отобразить SVG
-        canvasField.classList.replace("inactiveField", "activeField"); //отобразить Canvas
-        svgField.classList.replace("drawMode", "clickMode"); //изменить курсор на стрелку SVG
-        canvasField.classList.replace("drawMode", "clickMode"); //изменить курсор на стрелку Canvas
+        svgField.style.display = "block";
+        canvasField.style.display = "block";
+        svgField.style.cursor = "default";
+        canvasField.style.cursor = "default";
 
-        btnClear.classList.replace("unblockedButton", "blockedButton"); //заблокировать кнопку Clear
-        btnCursor.classList.replace("unblockedButton", "blockedButton"); //заблокировать кнопку курсора
+        btnRectDiv.style.display = "none";
+        btnCircDiv.style.display = "none";
+
+        btnClearDiv.style.display = "none";
+        btnCursDiv.style.display = "none";
     }
 
-//----------------------ИНСТРУМЕНТЫ--------------------------------
-    //Кнопка очистки
+
+    //----------------------ВЫБОР ФИГУРЫ--------------------------------
+    //RECTANGLE
+    btnRectangle.addEventListener('click', ev => {
+        activeFigure = "rectangle";
+        isDrawingMode = true;
+
+        btnRectangle.classList.replace("inactiveButton", "activeButton");
+        btnCircle.classList.replace("activeButton", "inactiveButton");
+        btnCursor.classList.replace("activeButton", "inactiveButton");
+    });
+
+
+    //CIRCLE
+    btnCircle.addEventListener('click', evt => {
+        activeFigure = "circle";
+        isDrawingMode = true;
+
+        btnRectangle.classList.replace("activeButton", "inactiveButton");
+        btnCircle.classList.replace("inactiveButton", "activeButton");
+        btnCursor.classList.replace("activeButton", "inactiveButton");
+    });
+
+    //----------------------ИНСТРУМЕНТЫ--------------------------------
+    //CLEAR
     btnClear.addEventListener('click', evt => {
         if (activeField === "SVG") {
             while (svgField.lastChild) {
@@ -128,18 +145,24 @@ window.onload = () => {
         }
         if (activeField === "Canvas") {
             context.clearRect(0, 0, canvasField.width, canvasField.height);
+            figures = [];
         }
     });
-    //Кнопка указателя
+
+
+    //CURSOR
     btnCursor.addEventListener('click', evt => {
-        if (!btnCursor.classList.contains("blockedButton")) {
-            isDrawingMode = false;
-            svgField.classList.replace("drawMode", "clickMode"); //изменить курсор на указатель
-            btnCursor.classList.replace("inactiveButton", "activeButton"); //выделить кнопку курсора как активную
-            btnRectangle.classList.replace("activeButton", "inactiveButton"); //выделить кнопку прямоугольника как неактивную
-            btnCircle.classList.replace("activeButton", "inactiveButton"); //выделить кнопку круга как неактивную
-            markFiguresAsDraggable(); //добавить фигурам класс, который позволит их перемещать
-        }
+        isDrawingMode = false;
+        svgField.style.cursor = "default";
+
+        btnCursor.classList.replace("inactiveButton", "activeButton"); //выделить кнопку курсора как активную
+        btnRectangle.classList.replace("activeButton", "inactiveButton"); //выделить кнопку прямоугольника как неактивную
+        btnCircle.classList.replace("activeButton", "inactiveButton"); //выделить кнопку круга как неактивную
+
+        countRect = document.querySelectorAll('rect')
+        countCircle = document.querySelectorAll('circle')
+
+        markFiguresAsDraggable(); //добавить фигурам класс, который позволит их перемещать
     });
 
     function markFiguresAsDraggable() {
@@ -154,7 +177,7 @@ window.onload = () => {
         }
     }
 
-//-----------------------SVG РИСОВАНИЕ------------------------------
+    //-----------------------SVG РИСОВАНИЕ------------------------------
     let x, y; //координаты
     let isDrawingStarted = false; //начато ли рисование
     let figure; //рисуемые фигуры (создаются и добавляются в SVG)
@@ -209,11 +232,11 @@ window.onload = () => {
         isDrawingStarted = false;
     });
 
-//-----------------------SVG ПЕРЕТАСКИВАНИЕ, УДАЛЕНИЕ, ИЗМЕНЕНИЕ------------------------------
+    //-----------------------SVG ПЕРЕТАСКИВАНИЕ, УДАЛЕНИЕ, ИЗМЕНЕНИЕ------------------------------
     let selectedElement;
-    let changeableElement;
     let startX, startY;
-    let offset = {x: 0, y: 0};
+    let offset = { x: 0, y: 0 };
+    let chosedElement;
 
     svgField.addEventListener('mousedown', evt => {
         if (!isDrawingMode) {
@@ -226,7 +249,7 @@ window.onload = () => {
     svgField.addEventListener('dblclick', evt => {
         if (!isDrawingMode) {
             if (evt.target.classList.contains("dragRect") || evt.target.classList.contains("dragCircle")) {
-                changeableElement = evt.target;
+                selectedElement = evt.target;
                 chooseElement(evt);
             }
         }
@@ -304,31 +327,18 @@ window.onload = () => {
     }
 
     function chooseElement(evt) {
-        if (changeableElement) {
-            if (changeableElement.classList.contains("chosen")) {
-                changeableElement.classList.remove("chosen");
-                changeableElement = null;
+        if (selectedElement) {
+            if (selectedElement.classList.contains("chosen")) {
+                selectedElement.classList.remove("chosen");
+                chosedElement = null;
+                selectedElement = null;
             }
         }
 
-        if (changeableElement) {
+        if (selectedElement) {
             removeChosen();
-            changeableElement.classList.add("chosen");
-            inputFillingColor.addEventListener("input", evt1 => {
-                if (changeableElement) {
-                    changeableElement.setAttribute("fill", inputFillingColor.value);
-                }
-            });
-            inputBorderColor.addEventListener("input", evt1 => {
-                if (changeableElement) {
-                    changeableElement.setAttribute("stroke", inputBorderColor.value);
-                }
-            });
-            slctBorderWidth.addEventListener("change", evt1 => {
-                if (changeableElement) {
-                    changeableElement.setAttribute("stroke-width", slctBorderWidth.value);
-                }
-            });
+            selectedElement.classList.add("chosen");
+            chosedElement = selectedElement;
         }
     }
 
@@ -344,64 +354,82 @@ window.onload = () => {
     }
 
     document.addEventListener('keydown', ev => {
-        if (changeableElement) {
-            if (changeableElement.classList.contains("chosen")) {
-                if (ev.key === 'Delete') {
-                    svgField.removeChild(changeableElement);
-                }
+        if (chosedElement) {
+            if (ev.key === 'Delete') {
+                svgField.removeChild(chosedElement);
             }
         }
     });
 
-//-----------------------CANVAS РИСОВАНИЕ------------------------------
+    inputFillingColor.addEventListener("input", evt1 => {
+        if (chosedElement) {
+            chosedElement.setAttribute("fill", inputFillingColor.value);
+        }
+    });
+    inputBorderColor.addEventListener("input", evt1 => {
+        if (chosedElement) {
+            chosedElement.setAttribute("stroke", inputBorderColor.value);
+        }
+    });
+    slctBorderWidth.addEventListener("change", evt1 => {
+        if (chosedElement) {
+            chosedElement.setAttribute("stroke-width", slctBorderWidth.value);
+        }
+    });
+
+    //-----------------------CANVAS РИСОВАНИЕ------------------------------
     context.lineJoin = 'round';
     context.lineCap = 'round';
-    let startPosition = {x: 0, y: 0};
-    let endPosition = {x: 0, y: 0};
+    let startPosition = { x: 0, y: 0 };
+    let endPosition = { x: 0, y: 0 };
     let figureWidth = 0;
     let figureHeight = 0;
     let figureRadius = 0;
-    let figures = [];
 
     function getClientOffset(event) {
         const x = event.offsetX;
         const y = event.offsetY;
-        return {x, y}
+        return { x, y }
     }
 
     canvasField.addEventListener('mousedown', event => {
-        startPosition = getClientOffset(event);
-        isDrawingStarted = true;
+        if (isDrawingMode) {
+            startPosition = getClientOffset(event);
+            isDrawingStarted = true;
+        }
     });
     canvasField.addEventListener('mousemove', event => {
         if (!isDrawingStarted || activeField !== "Canvas") return;
-
-        endPosition = getClientOffset(event);
-        figureWidth = endPosition.x - startPosition.x;
-        figureHeight = endPosition.y - startPosition.y;
-        figureRadius = Math.sqrt(Math.pow(endPosition.x - startPosition.x, 2) + Math.pow(endPosition.y - startPosition.y, 2));
-        clearCanvas();
-        if (activeFigure === "rectangle") drawRectangle(startPosition.x, startPosition.y, figureWidth, figureHeight,
-            inputFillingColor.value, inputBorderColor.value, slctBorderWidth.value);
-        if (activeFigure === "circle") drawCircle(startPosition.x, startPosition.y, figureRadius,
-            inputFillingColor.value, inputBorderColor.value, slctBorderWidth.value);
+        if (isDrawingMode) {
+            endPosition = getClientOffset(event);
+            figureWidth = endPosition.x - startPosition.x;
+            figureHeight = endPosition.y - startPosition.y;
+            figureRadius = Math.sqrt(Math.pow(endPosition.x - startPosition.x, 2) + Math.pow(endPosition.y - startPosition.y, 2));
+            clearCanvas();
+            if (activeFigure === "rectangle") drawRectangle(startPosition.x, startPosition.y, figureWidth, figureHeight,
+                inputFillingColor.value, inputBorderColor.value, slctBorderWidth.value);
+            if (activeFigure === "circle") drawCircle(startPosition.x, startPosition.y, figureRadius,
+                inputFillingColor.value, inputBorderColor.value, slctBorderWidth.value);
+        }
     });
     canvasField.addEventListener('mouseup', event => {
-        if (activeFigure === "rectangle") {
-            figures.push({
-                isRect: true, x: startPosition.x, y: startPosition.y,
-                width: figureWidth, height: figureHeight, radius: 0,
-                color: inputFillingColor.value, lineColor: inputBorderColor.value, lineSize: slctBorderWidth.value
-            });
+        if (isDrawingMode) {
+            if (activeFigure === "rectangle") {
+                figures.push({
+                    isRect: true, x: startPosition.x, y: startPosition.y,
+                    width: figureWidth, height: figureHeight, radius: 0,
+                    color: inputFillingColor.value, lineColor: inputBorderColor.value, lineSize: slctBorderWidth.value
+                });
+            }
+            if (activeFigure === "circle") {
+                figures.push({
+                    isRect: false, x: startPosition.x, y: startPosition.y,
+                    width: 0, height: 0, radius: figureRadius,
+                    color: inputFillingColor.value, lineColor: inputBorderColor.value, lineSize: slctBorderWidth.value
+                });
+            }
+            isDrawingStarted = false;
         }
-        if (activeFigure === "circle") {
-            figures.push({
-                isRect: false, x: startPosition.x, y: startPosition.y,
-                width: 0, height: 0, radius: figureRadius,
-                color: inputFillingColor.value, lineColor: inputBorderColor.value, lineSize: slctBorderWidth.value
-            });
-        }
-        isDrawingStarted = false;
     });
 
     function drawRectangle(x, y, width, height, color, lineColor, lineSize) {
@@ -435,4 +463,3 @@ window.onload = () => {
         });
     }
 }
-

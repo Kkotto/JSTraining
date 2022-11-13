@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -8,6 +9,7 @@
     <script src="js/main.js"></script>
     <title>lab5</title>
 </head>
+
 <body>
 <div id="panel">
     <div class="selectionField">
@@ -16,10 +18,10 @@
         <button id="btnCanvasSVG" class="inactiveButton">All</button>
     </div>
     <div class="selectionField">
-        <button id="btnRectangle" class="activeButton">Rectangle</button>
-        <button id="btnCircle" class="inactiveButton">Circle</button>
-        <button id="btnCursor" class="inactiveButton unblockedButton"><img src="img/cursor.png" alt="cursor" class="icon"></button>
-        <button id="btnClear" class="unblockedButton">Clear</button>
+        <div id="btnRectDiv"><button id="btnRectangle" class="activeButton">Rectangle</button></div>
+        <div id="btnCircDiv"><button id="btnCircle" class="inactiveButton">Circle</button></div>
+        <div id="btnCursDiv"><button id="btnCursor" class="inactiveButton"><img src="img/cursor.png" alt="cursor" class="icon"></button></div>
+        <div id="btnClearDiv"><button id="btnClear" class="inactiveButton">Clear</button></div>
     </div>
     <div class="selectionField">
         <div class="selectColorWidth">
@@ -43,7 +45,8 @@
         </div>
     </div>
 </div>
-<svg id="svgField" class="activeField drawMode"></svg>
-<canvas id="canvasField" class="inactiveField drawMode"></canvas>
+<svg id="svgField" class="drawMode"></svg>
+<canvas id="canvasField" class="drawMode"></canvas>
 </body>
+
 </html>
